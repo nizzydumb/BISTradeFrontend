@@ -4,10 +4,13 @@ import { Button } from "@/components/ui/button"
 import { api } from "@/lib/api"
 import { ProductGrid } from "@/components/products/product-grid"
 import { CategoryCard } from "@/components/categories/category-card"
+import { getServerDictionary } from "@/lib/i18n-server"
 
 export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
+  const dictionary = await getServerDictionary()
+
   const [categories, productsResponse] = await Promise.all([
     api.getCategories(),
     api.getProducts({ size: 8 }),
@@ -22,21 +25,20 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl text-balance">
-              Quality products for every need
+              {dictionary.home.title}
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground text-pretty">
-              Discover our curated collection of premium products. Browse by category, 
-              view detailed specifications, and shop with confidence.
+              {dictionary.home.description}
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button asChild size="lg">
                 <Link href="/products">
-                  Shop Now
+                  {dictionary.home.shopNow}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button variant="outline" size="lg" asChild>
-                <Link href="/categories">Browse Categories</Link>
+                <Link href="/categories">{dictionary.home.browseCategories}</Link>
               </Button>
             </div>
           </div>
@@ -48,17 +50,17 @@ export default async function HomePage() {
         <div className="flex items-end justify-between">
           <div>
             <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-              Shop by Category
+              {dictionary.home.shopByCategory}
             </h2>
             <p className="mt-2 text-muted-foreground">
-              Find exactly what you&apos;re looking for.
+              {dictionary.home.categorySubtitle}
             </p>
           </div>
           <Link
             href="/categories"
             className="hidden items-center text-sm font-medium transition-colors hover:text-muted-foreground sm:flex"
           >
-            View All
+            {dictionary.common.viewAll}
             <ArrowRight className="ml-1 h-4 w-4" />
           </Link>
         </div>
@@ -69,27 +71,27 @@ export default async function HomePage() {
         </div>
         <div className="mt-6 text-center sm:hidden">
           <Button variant="outline" asChild>
-            <Link href="/categories">View All Categories</Link>
+            <Link href="/categories">{dictionary.home.viewAllCategories}</Link>
           </Button>
         </div>
       </section>
 
-      {/* Featured Products Section */}
+      {/* {dictionary.home.featuredProducts} Section */}
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between">
           <div>
             <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-              Featured Products
+              {dictionary.home.featuredProducts}
             </h2>
             <p className="mt-2 text-muted-foreground">
-              Handpicked items from our collection.
+              {dictionary.home.featuredSubtitle}
             </p>
           </div>
           <Link
             href="/products"
             className="hidden items-center text-sm font-medium transition-colors hover:text-muted-foreground sm:flex"
           >
-            View All
+            {dictionary.common.viewAll}
             <ArrowRight className="ml-1 h-4 w-4" />
           </Link>
         </div>
@@ -98,7 +100,7 @@ export default async function HomePage() {
         </div>
         <div className="mt-6 text-center sm:hidden">
           <Button variant="outline" asChild>
-            <Link href="/products">View All Products</Link>
+            <Link href="/products">{dictionary.home.viewAllProducts}</Link>
           </Button>
         </div>
       </section>
@@ -123,9 +125,9 @@ export default async function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="mt-6 text-lg font-semibold">Fast Shipping</h3>
+              <h3 className="mt-6 text-lg font-semibold">{dictionary.home.fastShipping}</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Quick delivery to your doorstep with tracking available.
+                {dictionary.home.fastShippingText}
               </p>
             </div>
             <div className="text-center">
@@ -144,9 +146,9 @@ export default async function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="mt-6 text-lg font-semibold">Secure Checkout</h3>
+              <h3 className="mt-6 text-lg font-semibold">{dictionary.home.secureCheckout}</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Your information is protected with industry-standard security.
+                {dictionary.home.secureCheckoutText}
               </p>
             </div>
             <div className="text-center sm:col-span-2 lg:col-span-1">
@@ -165,9 +167,9 @@ export default async function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="mt-6 text-lg font-semibold">24/7 Support</h3>
+              <h3 className="mt-6 text-lg font-semibold">{dictionary.home.support}</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Our team is here to help with any questions or concerns.
+                {dictionary.home.supportText}
               </p>
             </div>
           </div>
@@ -178,10 +180,10 @@ export default async function HomePage() {
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="overflow-hidden rounded-3xl bg-foreground px-6 py-16 text-center sm:px-16">
           <h2 className="text-2xl font-bold tracking-tight text-background sm:text-3xl">
-            Ready to start shopping?
+            {dictionary.home.ctaTitle}
           </h2>
           <p className="mx-auto mt-4 max-w-lg text-background/80">
-            Explore our full catalog and find the perfect products for your needs.
+            {dictionary.home.ctaText}
           </p>
           <div className="mt-8">
             <Button
@@ -190,7 +192,7 @@ export default async function HomePage() {
               asChild
             >
               <Link href="/products">
-                Browse All Products
+                {dictionary.home.browseAllProducts}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>

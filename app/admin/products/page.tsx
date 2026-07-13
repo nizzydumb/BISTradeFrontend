@@ -28,8 +28,10 @@ import {
 import { api } from "@/lib/api"
 import type { Product, Category } from "@/lib/types"
 import { toast } from "sonner"
+import { useI18n } from "@/components/i18n/language-provider"
 
 export default function AdminProductsPage() {
+  const { dictionary } = useI18n()
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
@@ -66,9 +68,9 @@ export default function AdminProductsPage() {
     try {
       await api.deleteProduct(id)
       setProducts(products.filter((p) => p.id !== id))
-      toast.success("Product deleted successfully")
+      toast.success(dictionary.admin.productDeleted)
     } catch (error) {
-      toast.error("Failed to delete product")
+      toast.error(dictionary.admin.productDeleteFailed)
     } finally {
       setDeleting(null)
     }
@@ -78,36 +80,36 @@ export default function AdminProductsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Products</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{dictionary.admin.products}</h1>
           <p className="text-muted-foreground">
-            Manage your product catalog
+            {dictionary.admin.manageProducts}
           </p>
         </div>
         <Button asChild>
           <Link href="/admin/products/new">
             <Plus className="mr-2 h-4 w-4" />
-            Add Product
+            {dictionary.admin.addProduct}
           </Link>
         </Button>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>All Products</CardTitle>
+          <CardTitle>{dictionary.admin.allProducts}</CardTitle>
           <CardDescription>
-            {products.length} product{products.length !== 1 ? "s" : ""} in catalog
+            {products.length} {dictionary.admin.products.toLowerCase()}
           </CardDescription>
         </CardHeader>
         <CardContent>
           {loading ? (
-            <p className="text-muted-foreground">Loading products...</p>
+            <p className="text-muted-foreground">{dictionary.admin.loadingProducts}</p>
           ) : products.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-muted-foreground mb-4">No products found</p>
+              <p className="text-muted-foreground mb-4">{dictionary.admin.noProductsFound}</p>
               <Button asChild>
                 <Link href="/admin/products/new">
                   <Plus className="mr-2 h-4 w-4" />
-                  Add Your First Product
+                  {dictionary.admin.addFirstProduct}
                 </Link>
               </Button>
             </div>
@@ -115,12 +117,12 @@ export default function AdminProductsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-16">Image</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Attributes</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="w-16">{dictionary.common.image}</TableHead>
+                  <TableHead>{dictionary.common.name}</TableHead>
+                  <TableHead>{dictionary.common.price}</TableHead>
+                  <TableHead>{dictionary.common.category}</TableHead>
+                  <TableHead>{dictionary.admin.attributes}</TableHead>
+                  <TableHead className="text-right">{dictionary.common.actions}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -147,7 +149,7 @@ export default function AdminProductsPage() {
                         <Button asChild variant="ghost" size="icon">
                           <Link href={`/admin/products/${product.id}/edit`}>
                             <Pencil className="h-4 w-4" />
-                            <span className="sr-only">Edit</span>
+                            <span className="sr-only">{dictionary.common.edit}</span>
                           </Link>
                         </Button>
                         <AlertDialog>
@@ -158,24 +160,24 @@ export default function AdminProductsPage() {
                               className="text-destructive hover:text-destructive"
                             >
                               <Trash2 className="h-4 w-4" />
-                              <span className="sr-only">Delete</span>
+                              <span className="sr-only">{dictionary.common.delete}</span>
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Delete Product</AlertDialogTitle>
+                              <AlertDialogTitle>{dictionary.admin.deleteProduct}</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to delete &quot;{product.name}&quot;? This action cannot be undone.
+                                {dictionary.admin.deleteProductConfirm.replace("{name}", product.name)}
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogCancel>{dictionary.common.cancel}</AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={() => handleDelete(product.id)}
                                 disabled={deleting === product.id}
                                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                               >
-                                {deleting === product.id ? "Deleting..." : "Delete"}
+                                {deleting === product.id ? dictionary.admin.deleting : dictionary.common.delete}
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>

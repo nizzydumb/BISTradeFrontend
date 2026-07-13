@@ -5,6 +5,7 @@ import { ChevronLeft } from "lucide-react"
 import { api } from "@/lib/api"
 import { ProductGrid } from "@/components/products/product-grid"
 import { ProductGridSkeleton } from "@/components/products/product-skeleton"
+import { getServerDictionary } from "@/lib/i18n-server"
 
 export const dynamic = 'force-dynamic'
 
@@ -26,6 +27,7 @@ export async function generateMetadata({ params }: CategoryPageProps) {
 }
 
 async function CategoryProducts({ id }: { id: number }) {
+  const dictionary = await getServerDictionary()
   let category
   try {
     category = await api.getCategory(id)
@@ -39,6 +41,7 @@ async function CategoryProducts({ id }: { id: number }) {
 
   const productsResponse = await api.getProducts({ categoryId: id, size: 50 })
   const categoryProducts = productsResponse.content || []
+  const productLabel = categoryProducts.length === 1 ? dictionary.categoriesPage.product : dictionary.categoriesPage.products
 
   return (
     <>
@@ -48,14 +51,12 @@ async function CategoryProducts({ id }: { id: number }) {
           className="mb-4 inline-flex items-center text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <ChevronLeft className="mr-1 h-4 w-4" />
-          All Categories
+          {dictionary.categoriesPage.allCategories}
         </Link>
         <h1 className="mt-2 text-3xl font-bold tracking-tight">{category.name}</h1>
-        {category.description && (
-          <p className="mt-2 text-muted-foreground">{category.description}</p>
-        )}
+        {category.description && <p className="mt-2 text-muted-foreground">{category.description}</p>}
         <p className="mt-2 text-sm text-muted-foreground">
-          {categoryProducts.length} {categoryProducts.length === 1 ? "product" : "products"}
+          {categoryProducts.length} {productLabel}
         </p>
       </div>
 

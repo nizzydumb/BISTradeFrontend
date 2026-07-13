@@ -36,8 +36,10 @@ import {
 import { api } from "@/lib/api"
 import { formatPrice } from "@/lib/format"
 import type { OrderResponse, Product } from "@/lib/types"
+import { useI18n } from "@/components/i18n/language-provider"
 
 export default function AdminOrdersPage() {
+  const { dictionary } = useI18n()
   const [orders, setOrders] = useState<OrderResponse[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
@@ -56,7 +58,7 @@ export default function AdminOrdersPage() {
       setProducts(productsResponse.content || [])
     } catch (error) {
       console.error("Failed to fetch data:", error)
-      toast.error("Failed to load orders")
+      toast.error(dictionary.admin.loadOrdersFailed)
       setOrders([])
       setProducts([])
     } finally {
@@ -75,7 +77,7 @@ export default function AdminOrdersPage() {
       setOrders(response.content || [])
     } catch (error) {
       console.error("Failed to fetch orders:", error)
-      toast.error("Failed to load orders")
+      toast.error(dictionary.admin.loadOrdersFailed)
       setOrders([])
     }
   }
@@ -93,22 +95,22 @@ export default function AdminOrdersPage() {
   async function handleProcessOrder(id: number) {
     try {
       await api.processOrder(id)
-      toast.success("Order marked as processed")
+      toast.success(dictionary.admin.orderProcessed)
       fetchOrders()
     } catch (error) {
       console.error("Failed to process order:", error)
-      toast.error("Failed to process order")
+      toast.error(dictionary.admin.orderProcessFailed)
     }
   }
 
   async function handleDeleteOrder(id: number) {
     try {
       await api.deleteOrder(id)
-      toast.success("Order deleted")
+      toast.success(dictionary.admin.orderDeleted)
       fetchOrders()
     } catch (error) {
       console.error("Failed to delete order:", error)
-      toast.error("Failed to delete order")
+      toast.error(dictionary.admin.orderDeleteFailed)
     }
   }
 
@@ -139,7 +141,7 @@ export default function AdminOrdersPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Orders</h1>
+        <h1 className="text-3xl font-bold">{dictionary.admin.orders}</h1>
         <Badge variant="secondary" className="text-sm">
           {orders.length} {orders.length === 1 ? "order" : "orders"}
         </Badge>
@@ -148,9 +150,9 @@ export default function AdminOrdersPage() {
       {orders.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
           <Package className="h-12 w-12 text-muted-foreground" />
-          <h3 className="mt-4 text-lg font-semibold">No orders yet</h3>
+          <h3 className="mt-4 text-lg font-semibold">{dictionary.admin.noOrdersYet}</h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            Orders will appear here when customers place them.
+            {dictionary.admin.noOrdersText}
           </p>
         </div>
       ) : (
@@ -158,13 +160,13 @@ export default function AdminOrdersPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Order ID</TableHead>
-                <TableHead>Customer</TableHead>
-                <TableHead>Items</TableHead>
-                <TableHead>Total</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead className="w-40">Actions</TableHead>
+                <TableHead>{dictionary.admin.orderId}</TableHead>
+                <TableHead>{dictionary.common.customer}</TableHead>
+                <TableHead>{dictionary.common.items}</TableHead>
+                <TableHead>{dictionary.common.total}</TableHead>
+                <TableHead>{dictionary.common.status}</TableHead>
+                <TableHead>{dictionary.common.date}</TableHead>
+                <TableHead className="w-40">{dictionary.common.actions}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -214,15 +216,15 @@ export default function AdminOrdersPage() {
                         </DialogTrigger>
                       <DialogContent className="max-w-md">
                         <DialogHeader>
-                          <DialogTitle>Order #{order.id}</DialogTitle>
+                          <DialogTitle>{dictionary.admin.orderDetails.replace("{id}", String(order.id))}</DialogTitle>
                           <DialogDescription>
-                            Order details and customer information
+                            {dictionary.admin.orderDetailsText}
                           </DialogDescription>
                         </DialogHeader>
                         <div className="space-y-6">
                           {/* Customer Info */}
                           <div className="space-y-3">
-                            <h4 className="font-semibold">Customer Information</h4>
+                            <h4 className="font-semibold">{dictionary.admin.customerInfo}</h4>
                             <div className="space-y-2 text-sm">
                               <div className="flex items-center gap-2">
                                 <User className="h-4 w-4 text-muted-foreground" />
@@ -260,7 +262,7 @@ export default function AdminOrdersPage() {
 
                           {/* Order Items */}
                           <div className="space-y-3">
-                            <h4 className="font-semibold">Order Items</h4>
+                            <h4 className="font-semibold">{dictionary.admin.orderItems}</h4>
                             <div className="space-y-2">
                               {order.productOrders?.map((item, index) => (
                                 <div
@@ -285,7 +287,7 @@ export default function AdminOrdersPage() {
 
                           {/* Total */}
                           <div className="flex items-center justify-between border-t pt-4">
-                            <span className="font-semibold">Total</span>
+                            <span className="font-semibold">{dictionary.common.total}</span>
                             <span className="text-lg font-bold">
                               {formatPrice(order.productOrders?.reduce((sum, item) => sum + item.price * item.quantity, 0) || 0)}
                             </span>
@@ -299,7 +301,7 @@ export default function AdminOrdersPage() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleProcessOrder(order.id)}
-                          title="Mark as processed"
+                          title={dictionary.admin.markProcessed}
                         >
                           <CheckCircle className="h-4 w-4" />
                         </Button>
@@ -307,19 +309,19 @@ export default function AdminOrdersPage() {
                       
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button variant="outline" size="sm" title="Delete order">
+                          <Button variant="outline" size="sm" title={dictionary.admin.deleteOrder}>
                             <Trash2 className="h-4 w-4 text-destructive" />
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>Delete Order</AlertDialogTitle>
+                            <AlertDialogTitle>{dictionary.admin.deleteOrder}</AlertDialogTitle>
                             <AlertDialogDescription>
-                              Are you sure you want to delete order #{order.id}? This action cannot be undone.
+                              {dictionary.admin.deleteOrderConfirm.replace("{id}", String(order.id))}
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogCancel>{dictionary.common.cancel}</AlertDialogCancel>
                             <AlertDialogAction
                               onClick={() => handleDeleteOrder(order.id)}
                               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"

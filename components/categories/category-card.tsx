@@ -1,7 +1,10 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
+import { useI18n } from "@/components/i18n/language-provider"
 import type { Category } from "@/lib/types"
 
 interface CategoryCardProps {
@@ -9,6 +12,8 @@ interface CategoryCardProps {
 }
 
 export function CategoryCard({ category }: CategoryCardProps) {
+  const { dictionary } = useI18n()
+
   return (
     <Link href={`/categories/${category.id}`}>
       <Card className="group overflow-hidden border-0 bg-transparent shadow-none transition-all duration-300 hover:shadow-lg">
@@ -29,12 +34,10 @@ export function CategoryCard({ category }: CategoryCardProps) {
         </div>
         <CardContent className="flex items-center justify-between p-4">
           {category.description && (
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {category.description}
-            </p>
+            <p className="text-sm text-muted-foreground line-clamp-2">{category.description}</p>
           )}
           <span className="ml-auto flex items-center text-sm font-medium transition-colors group-hover:text-muted-foreground">
-            View
+            {dictionary.common.view}
             <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
           </span>
         </CardContent>

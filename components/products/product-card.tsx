@@ -6,6 +6,7 @@ import { Plus, Minus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { useCart } from "@/components/cart/cart-provider"
+import { useI18n } from "@/components/i18n/language-provider"
 import { formatPrice } from "@/lib/format"
 import type { Product } from "@/lib/types"
 
@@ -15,6 +16,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem, updateQuantity, getItemQuantity, isInCart } = useCart()
+  const { dictionary } = useI18n()
   const inCart = isInCart(product.id)
   const quantity = getItemQuantity(product.id)
   const isInStock = product.inStock !== false
@@ -32,7 +34,7 @@ export function ProductCard({ product }: ProductCardProps) {
           />
           {!isInStock && (
             <div className="absolute inset-0 flex items-center justify-center bg-background/80">
-              <span className="text-sm font-medium text-muted-foreground">Out of Stock</span>
+              <span className="text-sm font-medium text-muted-foreground">{dictionary.products.outOfStock}</span>
             </div>
           )}
         </div>
@@ -45,47 +47,23 @@ export function ProductCard({ product }: ProductCardProps) {
                 {product.name}
               </h3>
             </Link>
-            {product.category && (
-              <p className="mt-1 text-sm text-muted-foreground">{product.category.name}</p>
-            )}
+            {product.category && <p className="mt-1 text-sm text-muted-foreground">{product.category.name}</p>}
             <p className="mt-1 text-sm font-semibold">{formatPrice(product.price)}</p>
           </div>
-          
           {inCart ? (
             <div className="flex items-center justify-between rounded-lg border border-border bg-muted/50">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-l-lg rounded-r-none"
-                onClick={() => updateQuantity(product.id, quantity - 1)}
-                aria-label="Decrease quantity"
-              >
+              <Button variant="ghost" size="icon" className="h-9 w-9 rounded-l-lg rounded-r-none" onClick={() => updateQuantity(product.id, quantity - 1)} aria-label={dictionary.products.decreaseQuantity}>
                 <Minus className="h-4 w-4" />
               </Button>
-              <span className="min-w-[2rem] text-center text-sm font-medium">
-                {quantity}
-              </span>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-l-none rounded-r-lg"
-                onClick={() => addItem(product)}
-                aria-label="Increase quantity"
-              >
+              <span className="min-w-[2rem] text-center text-sm font-medium">{quantity}</span>
+              <Button variant="ghost" size="icon" className="h-9 w-9 rounded-l-none rounded-r-lg" onClick={() => addItem(product)} aria-label={dictionary.products.increaseQuantity}>
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
           ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-full gap-2"
-              onClick={() => addItem(product)}
-              disabled={!isInStock}
-              aria-label="Add to cart"
-            >
+            <Button variant="outline" size="sm" className="w-full gap-2" onClick={() => addItem(product)} disabled={!isInStock} aria-label={dictionary.products.addToCart}>
               <Plus className="h-4 w-4" />
-              Add to Cart
+              {dictionary.products.addToCart}
             </Button>
           )}
         </div>

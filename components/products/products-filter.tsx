@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { useI18n } from "@/components/i18n/language-provider"
 import type { Category } from "@/lib/types"
 
 interface ProductsFilterProps {
@@ -12,17 +13,16 @@ interface ProductsFilterProps {
 export function ProductsFilter({ categories, selectedCategoryId }: ProductsFilterProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { dictionary } = useI18n()
 
   const handleCategoryChange = (categoryId?: string) => {
     const params = new URLSearchParams(searchParams.toString())
-    
     if (categoryId) {
       params.set("category", categoryId)
     } else {
       params.delete("category")
     }
     params.delete("page")
-    
     router.push(`/products?${params.toString()}`)
   }
 
@@ -33,7 +33,7 @@ export function ProductsFilter({ categories, selectedCategoryId }: ProductsFilte
         size="sm"
         onClick={() => handleCategoryChange()}
       >
-        All
+        {dictionary.common.all}
       </Button>
       {categories.map((category) => (
         <Button
