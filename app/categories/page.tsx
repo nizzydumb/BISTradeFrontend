@@ -1,6 +1,8 @@
 import { api } from "@/lib/api"
 import { CategoryCard } from "@/components/categories/category-card"
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: "Categories - Catalog",
   description: "Browse products by category.",

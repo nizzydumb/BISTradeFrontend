@@ -4,6 +4,8 @@ import { ProductGrid } from "@/components/products/product-grid"
 import { ProductsFilter } from "@/components/products/products-filter"
 import { ProductGridSkeleton } from "@/components/products/product-skeleton"
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: "Products - Catalog",
   description: "Browse our complete collection of quality products.",

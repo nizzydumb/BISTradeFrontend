@@ -9,6 +9,8 @@ import { ProductGrid } from "@/components/products/product-grid"
 import { formatPrice } from "@/lib/format"
 import Link from "next/link"
 
+export const dynamic = 'force-dynamic'
+
 interface ProductPageProps {
   params: Promise<{ id: string }>
 }

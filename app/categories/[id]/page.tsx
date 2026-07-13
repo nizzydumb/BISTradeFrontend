@@ -6,6 +6,8 @@ import { api } from "@/lib/api"
 import { ProductGrid } from "@/components/products/product-grid"
 import { ProductGridSkeleton } from "@/components/products/product-skeleton"
 
+export const dynamic = 'force-dynamic'
+
 interface CategoryPageProps {
   params: Promise<{ id: string }>
 }

@@ -5,6 +5,8 @@ import { api } from "@/lib/api"
 import { ProductGrid } from "@/components/products/product-grid"
 import { CategoryCard } from "@/components/categories/category-card"
 
+export const dynamic = 'force-dynamic'
+
 export default async function HomePage() {
   const [categories, productsResponse] = await Promise.all([
     api.getCategories(),
